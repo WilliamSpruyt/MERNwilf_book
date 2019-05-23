@@ -7,7 +7,9 @@
     "start": "node server.js",
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"npm run server\" \"npm run client\"",
+    
+    "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "William Spruyt",
   "license": "ISC",
@@ -31,5 +33,9 @@
   },
   "devDependencies": {
     "nodemon": "^1.19.0"
+  },
+  "engines": {
+    "node": "10.6.0",
+    "npm": "6.1.0"
   }
 }

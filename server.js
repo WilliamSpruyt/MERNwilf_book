@@ -39,7 +39,7 @@ app.use(cors());
 
 app.use("/", router);
 app.use("/", loginRouter);
-/*app.get("*", (req, res) => {
+app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/client/build/index.html"));
-});*/
+});
 app.listen(API_PORT, () => console.log(`Listening on port ${API_PORT}`));

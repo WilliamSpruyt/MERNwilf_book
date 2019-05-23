@@ -4,7 +4,7 @@ import "whatwg-fetch";
 import { Modal, FormControl, Button } from "react-bootstrap";
 import { setInStorage, getFromStorage } from "../utils/storage";
 import { sign } from "crypto";
-const url = "http://localhost:3001";
+const url = "";
 //const url = "";
 export default class  VerifiedLogin extends Component {
   constructor(props) {

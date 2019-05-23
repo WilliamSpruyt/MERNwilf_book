@@ -2,29 +2,39 @@ import React from "react";
 import logo from "../Assets/logo.svg"
 import { Card, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+import { faThumbsUp,faThumbsDown } from '@fortawesome/free-solid-svg-icons'
 
- 
- 
 
- 
+
+
+
 export class Post extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+       
+       clicked:false
+      
+      
+      
+    };}
   render() {
     return (
-      <Card style={{ width: '36rem' , textAlign: 'left'}}>
-      <Card.Img variant="bottom" src={this.props.pic} />
-      <Card.Body>
-        <Card.Title>{this.props.caption}</Card.Title>
-        <Card.Text>
-        {this.props.alias+"  "}  
-        {this.props.date}
-       
-        </Card.Text>
-        <Button style={{ width: '2rem' }}> <FontAwesomeIcon icon={faThumbsUp}  /></Button>
-      </Card.Body>
-    </Card>
+      <Card bg="dark" style={{ width: '100%', textAlign: 'left' }}>
+        <Card.Img variant="bottom" src={this.props.pic} />
+        <Card.Body>
+          <Card.Title>{this.props.caption}</Card.Title>
+          <Card.Text>
+            {(this.props.alias == this.props.user) ? "Yourself " : this.props.alias + "  "}
+            {this.props.date}
+
+          </Card.Text>
+    {(this.props.user != this.props.alias) && <Button onClick={() => { this.props.like(this.props.user, this.props.alias, this.props.timestamp);this.setState({clicked:!this.state.clicked}) }}>{(this.state.clicked)?<FontAwesomeIcon icon={faThumbsDown} /> :<FontAwesomeIcon icon={faThumbsUp} />}</Button>}
+          {this.props.likedBy.length>0 && <Card.Text>{this.props.likedBy.length + " "}{this.props.likedBy.map((ele) => { return <span className="tinyGreyScript">{ele+","}</span> })}</Card.Text>}
+        </Card.Body>
+      </Card>
     );
   }
-  
+
 }
- 
+//like(user,alias,timestamp)

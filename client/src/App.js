@@ -10,9 +10,9 @@ import "whatwg-fetch";
 import { Button } from "react-bootstrap";
 import { getFromStorage } from "./utils/storage";
 import VerifiedLogin from "./Components/verified"
-const url = "http://localhost:3001";
+//const url = "http://localhost:3001";
 
-//const url = "/message";
+const url = "";
 
 // Get a reference to the database service
 
@@ -23,7 +23,7 @@ class App extends Component {
     super(props);
     this.state = {
       id: -1,
-      user: "Wilf",
+      user: "",
       email: '',
       loginshow: true,
       message: [],
@@ -31,30 +31,34 @@ class App extends Component {
       date: [],
       posts: [],
       friends: [],
-
-
+      profilePic: yourFriend,
+      messages: [{ text: "howdy cowby", sender: "Stalker", time: "MidNight" }],
       otherPeople: [],
+      freshFriends:[],
 
       comps: complimentaries(),
 
 
     };
     this.loadStatsFromServer = this.loadStatsFromServer.bind(this);
-
     this.updatePost = this.updatePost.bind(this);
+    this.updateProfilePic = this.updateProfilePic.bind(this);
+    this.mergePost = this.mergePost.bind(this)
     this.updateDB = this.updateDB.bind(this);
     this.onLogin = this.onLogin.bind(this);
-    this.handleLogin = this.handleLogin.bind(this);
+    this.sendMessage = this.sendMessage.bind(this);
     this.getName = this.getName.bind(this);
     this.setShow = this.setShow.bind(this);
     this.logout = this.logout.bind(this);
-    this.findFriend=this.findFriend.bind(this);
-    this.addFriend=this.addFriend.bind(this);
+    this.findFriend = this.findFriend.bind(this);
+    this.addFriend = this.addFriend.bind(this);
+    this.like=this.like.bind(this);
 
   }
   componentDidMount() {
-
+    console.log(this.state.comps)
     window.scrollTo(0, 0)
+
 
   }
   loadStatsFromServer = (id) => {
@@ -65,22 +69,39 @@ class App extends Component {
     fetch(`${url}/${id}`)
       .then(data => data.json())
       .then(res => {
-        if (!res.success) this.setState({ error: res.error }, console.log('oh shit it has not worked ' + this.state.error));
-        else
-          this.setState({ name: res.act[0].name, id: res.act[0]._id, posts: res.act[0].posts, friends: res.act[0].friends, email: res.act[0].email,pic:res.act[0].pic }, () => {
-
+        if (!res.success) this.setState({ error: res.error });
+        else {
+          this.setState({ name: res.user[0].name, id: res.user[0]._id, posts: res.user[0].posts, friends: res.user[0].friends, email: res.user[0].email, profilePic: res.user[0].profilePic, messages: res.user[0].messages }, () => {
+              this.state.friends.forEach((ele)=>this.findFriendByEmail(ele.email))
+            
           });
-      });
-  };
+        }
+        this.setState({friends:this.state.freshFriends})
+      })
+  }
+  sortByKey(array, key) {
+    return array.sort(function (a, b) {
+      var x = a[key]; var y = b[key];
+      return ((x > y) ? -1 : ((x < y) ? 1 : 0));
+    });
+  }
+  mergePost(posts, friends) {
+    var merged = posts.slice(0);
+    if (friends.length > 0) {
+      friends.forEach(friend => merged = merged.concat(friend.posts))
 
+      merged = this.sortByKey(merged, "timestamp");
+      
+    }
+    return merged
+  }
+
+  
   updateDB() {
-
-
-
-
     var posts = this.state.posts;
     var friends = this.state.friends;
     var id = this.state.id;
+    var profilePic = this.state.profilePic;
 
     return fetch(`${url}/update/${id}`, {
       method: "POST",
@@ -88,13 +109,15 @@ class App extends Component {
       body: JSON.stringify({
         posts,
         friends,
-         
+        profilePic
+
       })
     })
       .then(res => res.json())
       .then(res => {
-        console.log(posts, friends, "UPDATED:", res.message);
-        this.loadStatsFromServer(this.state.email);
+        console.log("UPDATED:");
+       // this.loadStatsFromServer(this.state.email);
+         
         return res;
       })
 
@@ -102,71 +125,166 @@ class App extends Component {
   }
 
 
-addFriend(friend,isFriend){
-  if(!isFriend){
-  if (this.state.friends) {
-    var oldFriends = this.state.friends.slice(0);
+  addFriend(friend, isFriend) {
+    if (!isFriend) {
+      if (this.state.friends) {
+        var oldFriends = this.state.friends.slice(0).concat(friend);
 
+        this.setState({ friends: oldFriends, otherPeople: [] }, () => { this.updateDB() });
+      }
+      else this.setState({ friends: [friend], otherPeople: [] }, () => { this.updateDB() });
+    }
+    else {
+      var oldFriends = this.state.friends.slice(0);
+      var newFriends = oldFriends.filter(ele => ele._id != friend._id);
 
+      this.setState({ friends: newFriends }, () => { this.updateDB() });
 
-    oldFriends.unshift({ name:friend.name,homeTown:friend.homeTown,id:friend.id });
-    
-    this.setState({ friends: oldFriends }, () => { this.updateDB() });
+    }
   }
-  else this.setState({ friends: [{ name:friend.name,homeTown:friend.homeTown,id:friend.id }] }, () => { this.updateDB() });}
-  else{
-    var oldFriends = this.state.friends.slice(0);
-   var newFriends=oldFriends.filter(ele=>ele.id!=friend.id);
-   
-   this.setState({ friends: newFriends,otherPeople:{} }, () => { this.updateDB() });
-   
-  }
-}
 
 
 
-  updatePost(a, d, c, p) {
+  updatePost(alias, dateString, caption, pic, timestamp) {
     if (this.state.posts) {
-      var oldPosts = this.state.posts.slice(0);
-
-
-
-      oldPosts.unshift({ alias: a, date: d, caption: c, pic: p });
-
+      var oldPosts = this.state.posts.slice(0).concat({ alias: alias, date: dateString, caption: caption, pic: pic, timestamp: timestamp, likedBy:[] });
+  
       this.setState({ posts: oldPosts }, () => { this.updateDB() });
     }
-    else this.setState({ posts: [{ alias: a, date: d, caption: c, pic: p }] }, () => { this.updateDB() });
+    else this.setState({ posts: [{ alias: alias, date: dateString, caption: caption, pic: pic, timestamp: timestamp,likedBy:[] }] }, () => { this.updateDB() });
+
+  }
+
+  like(user,alias,timestamp,id){
+    var likedAlready=-1;
+    var friendArray=this.state.friends.slice(0);
+
+    var friendIndex = friendArray.findIndex(function(element) {
+      return  element.name==alias ;
+     
+    });
+     
+    var likedPostIndex=friendArray[friendIndex].posts.findIndex(function(element){
+      return  element.timestamp==timestamp
+    })
+
+    if(likedPostIndex>-1){
+    if(friendArray[friendIndex].posts[likedPostIndex].likedBy)  {likedAlready=friendArray[friendIndex].posts[likedPostIndex].likedBy.findIndex(
+       function(element) {return element==user}
+      )}
+      if(likedAlready>-1){
+        friendArray[friendIndex].posts[likedPostIndex].likedBy.splice(likedAlready,1)
+      }
+      else{
+      if(friendArray[friendIndex].posts[likedPostIndex].likedBy){
+        
+        friendArray[friendIndex].posts[likedPostIndex].likedBy=friendArray[friendIndex].posts[likedPostIndex].likedBy.concat(user)}
+      else{friendArray[friendIndex].posts[likedPostIndex].likedBy=[user]}}
+   this.setState({friends:friendArray},()=>{this.sendLike(user,this.state.friends[friendIndex]._id, friendArray[friendIndex].posts[likedPostIndex]) })
+  }
+ 
+}
+ 
+
+
+  updateProfilePic(pic) {
+    this.setState({ profilePic: pic }, () => { this.updateDB() })
 
   }
 
   findFriend = (term) => {
 
+    if (term != this.state.name) {
+      // fetch returns a promise. If you are not familiar with promises, see
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+      fetch(`${url}/friends/${term}`)
+        .then(data => data.json())
+        .then(res => {
+          if (!res.success) this.setState({ error: res.error }, console.log('oh shit it has not worked ' + this.state.error));
+          else
+            this.setState({ otherPeople: res.friend[0] }, () => {
 
-    // fetch returns a promise. If you are not familiar with promises, see
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
-    fetch(`${url}/friends/${term}`)
-      .then(data => data.json())
-      .then(res => {
-        if (!res.success) this.setState({ error: res.error }, console.log('oh shit it has not worked ' + this.state.error));
-        else
-          this.setState({ otherPeople: { name: res.act[0].name, id: res.act[0]._id ,homeTown:res.act[0].homeTown} }, () => {
 
-       console.log(this.state.otherPeople)   });
-      });
+            });
+        });
+    }
   };
+  
+  findFriendByEmail = (term) => {
+
+    if (term != this.state.name) {
+      // fetch returns a promise. If you are not familiar with promises, see
+      // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+      fetch(`${url}/refresh/${term}`)
+        .then(data => data.json())
+        .then(res => {
+          if (!res.success) this.setState({ error: res.error }, console.log('oh shit it has not worked ' + this.state.error));
+          else
+            var temppeople=this.state.freshFriends;
+            temppeople.push(res.friend[0])
+            this.setState({ freshFriends: temppeople }, () => {
 
 
+            });
+        });
+    }
+  };
+  
+
+  sendMessage(sender, id, time, text, pic) {
+
+    var messages = { sender: sender, text: text, time: time, pic, pic };
+
+
+    return fetch(`${url}/message/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        messages
+
+      })
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log("UPDATED:", res.message);
+
+        return res;
+      })
+
+      .catch(err => console.error(err));
+  }
+ 
+  sendLike(user, id,post) {
+
+    var user = user;
+    var post =post;
+
+
+    return fetch(`${url}/likes/${id}`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        user,
+       post
+
+      })
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log("UPDATED: sendlike", post.timestamp
+        );
+
+        return res;
+      })
+
+      .catch(err => console.error(err));
+  }
   onLogin(name) {
     this.setState({ loginshow: false, user: name });
 
   }
-  handleLogin(event) {
-    this.setState({ user: event.target.value });
-  }
-  changeHandler1(event) {
-    console.log(event.target.name);
-    this.setState({ [event.target.name]: event.target.value });
-  }
+
+
   getName(name) {
     this.setState({ user: name });
   }
@@ -181,8 +299,8 @@ addFriend(friend,isFriend){
     if (obj && obj.token) {
       const { token } = obj;
       // Verify token
-      // fetch("http://localhost:3001/account/logout?token=" + token)
-      fetch("/account/logout?token=" + token)
+      fetch("http://localhost:3001/account/logout?token=" + token)
+        // fetch("/account/logout?token=" + token)
         .then(res => res.json())
         .then(json => {
           if (json.success) {
@@ -209,13 +327,28 @@ addFriend(friend,isFriend){
           show={this.state.loginshow}
           submit={this.onLogin}
           getName={this.getName}
-          handleName={this.handleLogin}
+
           setShow={this.setShow}
           title="Welcome to WilfBook! Sign in or register"
           loadStatsFromServer={this.loadStatsFromServer}
         />
 
-        {!this.state.loginshow && <Homescreen piv={this.state.pic} findFriend={this.findFriend} id={this.state.id} alias={this.state.name} otherPeople={this.state.otherPeople} friends={this.state.friends} posts={this.state.posts} updateDB={this.updateDB} updatePost={this.updatePost} addFriend={this.addFriend} />}
+        {!this.state.loginshow && <Homescreen
+          sendMessage={this.sendMessage}
+          messages={this.state.messages}
+          colors={this.state.comps}
+          profilePic={this.state.profilePic}
+          updateProfilePic={this.updateProfilePic}
+          findFriend={this.findFriend}
+          id={this.state.id}
+          alias={this.state.name}
+          like={this.like}
+          otherPeople={this.state.otherPeople}
+          friends={this.state.friends}
+          posts={this.mergePost(this.state.posts, this.state.friends)}
+          updateDB={this.updateDB}
+          updatePost={this.updatePost}
+          addFriend={this.addFriend} />}
 
 
 
@@ -223,7 +356,25 @@ addFriend(friend,isFriend){
           Logged in as {this.state.name}
           <Button
             onClick={() => {
-              this.setState({ loginshow: true });
+              this.setState({
+                id: -1,
+                user: "",
+                email: '',
+                loginshow: true,
+                message: [],
+                list: [],
+                date: [],
+                posts: [],
+                friends: [],
+                profilePic: "",
+
+
+                otherPeople: [],
+
+                comps: complimentaries(),
+
+
+              });
               this.logout();
             }}
           >
@@ -243,20 +394,32 @@ addFriend(friend,isFriend){
 
 
 function complimentaries() {
-  var red1 = Math.floor(Math.random() * 256);
-  var red2 = Math.floor(Math.random() * 256);
-  var red3 = 256 - red1 - red2;
-  var blu1 = Math.floor(Math.random() * 256);
-  var blu2 = Math.floor(Math.random() * 256);
-  var blu3 = 256 - blu1 - blu2;
-  var gre1 = Math.floor(Math.random() * 256);
-  var gre2 = Math.floor(Math.random() * 256);
-  var gre3 = 256 - gre1 - gre2;
+  var brk1= Math.floor(Math.random() * 256);
+  var brk2= Math.floor(Math.random() * brk1);
+
+
+
+  var red1 =brk2;
+  var red2 =brk1-brk2;
+  var red3 = 256 - brk1
+  var brk1= Math.floor(Math.random() * 256);
+  var brk2= Math.floor(Math.random() * brk1);
+  var gre1 =brk2;
+  var gre2 =brk1-brk2;
+  var gre3 = 256 - brk1
+  var brk1= Math.floor(Math.random() * 256);
+  var brk2= Math.floor(Math.random() * brk1);
+  var blu1 =brk2;
+  var blu2 =brk1-brk2;
+  var blu3 = 256 - brk1
+   
 
   return {
-    red: [red1, red2, red3],
-    blue: [blu1, blu2, blu3],
-    green: [gre1, gre2, gre3]
+    background: [red1, blu1, gre1],
+  
+    color: [red2,blu2,gre2],
+    highlight: [red3,blu3,gre3]
+    
   };
 }
 

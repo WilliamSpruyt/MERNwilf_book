@@ -4,8 +4,8 @@ import Webcam from "react-webcam";
 import ImageUploader from 'react-images-upload';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera,faFileImage} from '@fortawesome/free-solid-svg-icons'
-
-import { FormControl, Row, Container, Col,Button,Card } from "react-bootstrap";
+import './login.css';
+import { FormControl, Row, Container, Col,Button,Card, Form } from "react-bootstrap";
 export class WhatsOnYourMind extends React.Component {
   constructor(props) {
     super(props);
@@ -44,18 +44,24 @@ export class WhatsOnYourMind extends React.Component {
     };
     return (
      
-        <div float="left">
+        <div width="100%">
             {this.state.pic && <Card style={{ width: '18rem' }}>
       <Card.Img variant="top" src={this.state.pic} />
-       
+      <Card.ImgOverlay>
+     <div> <Button className="picButton">Edit
+          </Button><Button className="picButton" onClick={()=>this.setState({pic:null})}>Delete
+          </Button><Button className="picButton" onClick={()=>this.props.updateProfilePic(this.state.pic)}>Set as Profile
+          </Button></div>
+  </Card.ImgOverlay>
     </Card>}
-          <Row><Col  xs lg="2">
+          <Row>
+            <Col style={{padding: '0'}} xs={1}  >
            <Button className="butz2" onClick={()=>this.setState({camon:!this.state.camon})
              }>
            <FontAwesomeIcon icon={faCamera}  />
           </Button>
            </Col>
-         <Col> <FormControl 
+         <Col style={{padding: '0'}} xs={10} ><FormControl 
           
             type="text"
             placeholder="What's on your mind?"
@@ -66,11 +72,12 @@ export class WhatsOnYourMind extends React.Component {
               if (event.key === 'Enter') {
               var d=new Date();
               this.props.updatePost(this.props.alias,d.toString(),this.state.blah,
-              this.state.pic);this.setState({blah:"",pic:null})}}}
-          /></Col><Button className="butz2" onClick={()=>this.setState({addPic:!this.state.addPic})
+              this.state.pic,d.getTime());this.setState({blah:"",pic:null})}}}
+          /></Col>
+          <Col style={{padding: '0'}}  xs={1}><Button className="butz2" onClick={()=>this.setState({addPic:!this.state.addPic})
         }>
       <FontAwesomeIcon icon={faFileImage}  />
-     </Button> 
+     </Button> </Col>
          </Row>
           {this.state.camon &&  <div>
             <Webcam
@@ -100,4 +107,6 @@ export class WhatsOnYourMind extends React.Component {
       blah: event.target.value
     });
   }
+
+   
 }

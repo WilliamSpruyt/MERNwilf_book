@@ -8,6 +8,8 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const bodyParser = require("body-parser");
+ 
+ 
 const logger = require("morgan");
 const mongoose = require("mongoose");
 // and create our instances
@@ -27,9 +29,10 @@ var db = mongoose.connection;
 
 db.on("error", console.error.bind(console, "MongoDB connection error:"));
 // now we should configure the API to use bodyParser and look for JSON data in the request body
-
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.urlencoded({limit: '50mb', extended: true}));
 app.use(express.static(path.join(__dirname, "client/build")));
-app.use(bodyParser.urlencoded({ extended: false }));
+ 
 app.use(bodyParser.json());
 app.use(logger("dev"));
 app.use(cors());

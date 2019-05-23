@@ -9,15 +9,15 @@ let Action = require('../models/user');
 //load account
 actionRoutes.get("/:user", (req, res) => {
     
-   Action.find({ email: req.params.user }).exec((err, mono) => {
+   Action.find({ email: req.params.user }).exec((err, profile) => {
       if (err) {
         return res.json({ success: false, message: "Some Error" });
       }
-      if (mono.length) {
+      if (profile.length) {
         return res.json({
           success: true,
           message: "Message fetched by id successfully",
-          act:mono
+          user:profile
         });
       } else {
         return res.json({
@@ -27,17 +27,41 @@ actionRoutes.get("/:user", (req, res) => {
       }
     });
   });
+ 
+ 
   actionRoutes.get("/friends/:user", (req, res) => {
     
-    Action.find({ name: req.params.user }).exec((err, mono) => {
+    Action.find({ name: req.params.user }).exec((err, profile) => {
        if (err) {
          return res.json({ success: false, message: "Some Error" });
        }
-       if (mono.length) {
+       if (profile.length) {
          return res.json({
            success: true,
            message: "Message fetched by id successfully",
-           act:mono
+           
+           friend:profile
+         });
+       } else {
+         return res.json({
+           success: false,
+           message: "Message with the given id not found"
+         });
+       }
+     });
+   });
+   actionRoutes.get("/refresh/:id", (req, res) => {
+    
+    Action.find({ email: req.params.id }).exec((err, profile) => {
+       if (err) {
+         return res.json({ success: false, message: "Some Error" });
+       }
+       if (profile.length) {
+         return res.json({
+           success: true,
+           message: "Message fetched by id successfully",
+           
+           friend:profile
          });
        } else {
          return res.json({
@@ -87,6 +111,8 @@ actionRoutes.route('/update/:id').post(function (req, res) {
     else {
         action.posts = req.body.posts;
         action.friends = req.body.friends;
+        action.profilePic=req.body.profilePic;
+         
         
 
         action.save().then(action => {
@@ -97,6 +123,51 @@ actionRoutes.route('/update/:id').post(function (req, res) {
       });
     }
   });
+});
+
+actionRoutes.route('/message/:id').post(function (req, res) {
+  Action.findById(req.params.id, function(err, action) {
+  if (!action)
+    res.status(404).send("data is not found");
+  else {
+      
+       
+      action.messages.push( req.body.messages );
+       console.log()
+
+      action.save().then(action => {
+        res.json('Update complete');
+    })
+    .catch(err => {
+          res.status(400).send("unable to update the database");
+    });
+  }
+});
+});
+actionRoutes.route('/likes/:id').post(function (req, res) {
+  Action.findById(req.params.id, function(err, action) {
+  if (!action)
+    res.status(404).send("data is not found");
+  else {
+    for( var i = 0; i < action.posts.length; i++){ 
+      if ( action.posts[i].timestamp === req.body.post.timestamp) {
+        action.posts.splice(i, 1); 
+        break;
+      }
+   }
+      
+      action.posts.push(req.body.post)
+      console.log(req.body.post.likedBy)
+
+      action.save().then(action => {
+        res.json('Update complete');
+         
+    })
+    .catch(err => {
+          res.status(400).send("unable to update the database");
+    });
+  }
+});
 });
 
 // Defined delete | remove | destroy route

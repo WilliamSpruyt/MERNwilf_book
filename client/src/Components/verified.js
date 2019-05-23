@@ -127,7 +127,9 @@ export default class  VerifiedLogin extends Component {
             signUpError: json.message,
             isLoading: false,
             signUpEmail: "",
-            signUpPassword: ""
+            signUpPassword: "",
+            signUpName: "",
+            signUpHomeTown:"",
           });
         } else {
           this.setState({
@@ -273,7 +275,7 @@ export default class  VerifiedLogin extends Component {
     }
     return (
       <div>
-        <p>Signed in</p>
+        
       </div>
     );
   }

@@ -28,11 +28,7 @@ export class FindFriends extends React.Component {
              
                 <div float="left">
                     
-                  <Row><Col  xs lg="2">
-                    
-                    
-                   </Col>
-                 <Col> <FormControl 
+                    <FormControl 
                   
                     type="text"
                     placeholder="Find friends"
@@ -42,8 +38,7 @@ export class FindFriends extends React.Component {
                     onKeyPress={event => {
                       if (event.key === 'Enter') {
                       }}}
-                  /></Col> 
-                 </Row>
+                  /> 
                   </div>
                    
                  

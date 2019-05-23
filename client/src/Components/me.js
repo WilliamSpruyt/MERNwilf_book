@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../Assets/logo.svg"
- 
+import "./login.css";
  
  
 
@@ -11,7 +11,7 @@ export class Me extends React.Component {
      
         <div>
             
-            <img src={this.props.pic} style={{width:"10%", textAlign: 'left',margin:"5px",backgroundColor:"white", boxShadow:"12px 12px 2px 1px rgba(0, 0, 255, .2", borderRadius :'25%'}}/>
+            <img src={this.props.pic } className="profile-pics" />
            <div>Signed in as {this.props.alias}</div>
            
          </div>

@@ -12,7 +12,7 @@ import { getFromStorage } from "./utils/storage";
 import VerifiedLogin from "./Components/verified"
 //const url = "http://localhost:3001";
 
-const url = "/";
+const url = "";
 
 // Get a reference to the database service
 

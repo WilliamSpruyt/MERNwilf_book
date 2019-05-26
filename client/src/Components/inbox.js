@@ -1,8 +1,7 @@
 import React from "react";
-import logo from "../Assets/logo.svg"
+ 
 import { Card, Button } from "react-bootstrap";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+ 
 
  
  
@@ -12,13 +11,14 @@ export class Inbox extends React.Component {
   render() {
       return(
           <div>
+          <h3>Inbox</h3>
               {this.props.messages && this.props.messages.map( ele=>{return  (
         <Card bg="dark" style={{ width: '100%' , textAlign: 'left'}}>
-        <Card.Img variant="bottom" src={this.props.pic} />
+        <Card.Img variant="bottom" src={ele.pic}  className="profile-pics"/>
         <Card.Body>
-          <Card.Title>{ele.text}</Card.Title>
+          <Card.Title>{ele.sender}</Card.Title>
           <Card.Text>
-          {ele.sender}  
+          {ele.text}  
         
          
           </Card.Text>
@@ -27,7 +27,7 @@ export class Inbox extends React.Component {
           {ele.time}
          
           </Card.Text>
-          <Button style={{ width: '2rem' }}> <FontAwesomeIcon icon={faThumbsUp}  /></Button>
+           
         </Card.Body>
       </Card>
       );

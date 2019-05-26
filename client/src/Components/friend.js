@@ -1,13 +1,13 @@
 import React from "react";
-import logo from "../Assets/logo.svg"
+ 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { faUserSlash } from '@fortawesome/free-solid-svg-icons'
-import profile from "../Assets/profile.JPG"
+ 
 import "./login.css"
 import { MessageBox } from './message-box';
 
-import { Jumbotron, Container, Row, Col, Button, Card } from "react-bootstrap";
+import {   Button, Card } from "react-bootstrap";
 export class Friend extends React.Component {
   render() {
     return (
@@ -30,7 +30,7 @@ export class Friend extends React.Component {
 
               </Button>
             </Card.Body>
-            {this.props.pals && <MessageBox id={this.props.friend._id} sendMessage={this.props.sendMessage} alias={this.props.alias} friendsName={this.props.friend.name}/>}
+            {this.props.pals && <MessageBox id={this.props.friend._id} sendMessage={this.props.sendMessage} alias={this.props.alias} friendsName={this.props.friend.name} pic={this.props.pic}/>}
           </Card>
         }</div>
 

@@ -23,7 +23,7 @@ var cors = require("cors");
 const API_PORT = process.env.PORT || 3001;
 // db config -- set your URI from mLab in secrets.js
 
-mongoose.connect(process.env.DB_KEY);
+mongoose.connect(process.env.DB_KEY, {useNewUrlParser: true});
 
 var db = mongoose.connection;
 

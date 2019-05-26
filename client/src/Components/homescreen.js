@@ -1,6 +1,6 @@
 import React from "react";
 import logo from "../Assets/logo.svg"
-import profile from "../Assets/profile.JPG"
+ 
 import {Me} from "./me"
 import{WhatsOnYourMind} from "../Components/whatsonyourmind"
 import {Post} from "../Components/post"
@@ -17,14 +17,14 @@ export class Homescreen extends React.Component {
         <div style={{textAlign:'center'}}>
          
             <img src={logo} width="100%" />
-           
-         
-          <Row   ><Col style={{padding: '0'}}  >
-          <div  >
+            <div  >
                       <Me alias={this.props.alias} pic={this.props.profilePic} p/>
                      
                 </div >
-                <div style={{borderStyle: 'inset'}}>
+         
+          <Row   ><Col style={{padding: '0'}}  >
+         
+                <div style={{padding:'25px' }}>
                 {this.props.friends.length? <h3>Friends</h3>: <h3>Friendless!</h3>}
           {this.props.friends.map((ele, i) => {
                   return (
@@ -32,6 +32,7 @@ export class Homescreen extends React.Component {
                     friend={ele}
                     alias={this.props.alias}
                     email={this.props.email}
+                    pic={this.props.profilePic}
                     pals={true}
                     sendMessage={this.props.sendMessage}
                      />
@@ -42,12 +43,13 @@ export class Homescreen extends React.Component {
                  
           </Col>
     
-    <Col xs={6} style={{padding: '0'}} > 
+    <Col l={6} md={6}  xs={12} div style={{padding:'25px' }} > 
      <WhatsOnYourMind id ={this.props.id} alias={this.props.alias} updateDB={this.props.updateDB} updatePost={this.props.updatePost} updateProfilePic={this.props.updateProfilePic} blah=""/>
      
     {this.props.posts && this.props.posts.map((ele, i) => {
             return (
               <Post 
+              
               alias={ele.alias}
               date={ele.date}
               timestamp={ele.timestamp}
@@ -59,15 +61,16 @@ export class Homescreen extends React.Component {
                 
               />
             );
-          })}</Col><Col  style={{padding: '0'}} >
+          })}</Col><Col  style={{padding:'25px' }} >
           
-           
+          <h3>Find Friends</h3>
            <FindFriends  findFriend={this.props.findFriend}/>
            
                    {this.props.otherPeople.name && <Friend  addFriend={this.props.addFriend} pals={false}
                     friend={this.props.otherPeople}
                      />}
-            <Inbox messages={this.props.messages}/>
+            
+            <Inbox messages={this.props.messages}  />
                  
           </Col>
      

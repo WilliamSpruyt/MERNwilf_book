@@ -1,7 +1,5 @@
 import React, { Component } from "react";
-import soHappy from "./Assets/meeee.png"
 import yourFriend from "./Assets/friend.png"
-import onTopOfTheWorldToday from "./Assets/onTopOfTheWorldToday.jpg"
 
 import "./App.css";
 import { Homescreen } from "./Components/homescreen"
@@ -19,7 +17,7 @@ const url = "";
 class App extends Component {
 
   constructor(props) {
-    var d = new Date();
+    
     super(props);
     this.state = {
       id: -1,
@@ -155,7 +153,7 @@ class App extends Component {
 
   }
 
-  like(user,alias,timestamp,id){
+  like(user,alias,timestamp){
     var likedAlready=-1;
     var friendArray=this.state.friends.slice(0);
 

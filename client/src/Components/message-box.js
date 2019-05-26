@@ -1,8 +1,7 @@
 import React from "react";
  
  
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faThumbsUp } from '@fortawesome/free-solid-svg-icons'
+ 
 import './login.css';
 import { FormControl, Row, Container, Col,Button,Card, Form } from "react-bootstrap";
 
@@ -12,7 +11,7 @@ export class MessageBox extends React.Component {
       this.state = {
          
         blah:"",
-        pic:null,
+        
         
         
       };
@@ -42,7 +41,7 @@ export class MessageBox extends React.Component {
                 if (event.key === 'Enter') {
                 var d=new Date();
                 this.props.sendMessage(this.props.alias,this.props.id,d.toString(),this.state.blah,
-                this.state.pic,d.getTime());this.setState({blah:"",pic:null})}}}
+                this.props.pic,d.getTime());this.setState({blah:""})}}}
             /> 
              
            

@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../Assets/logo.svg"
+
 import Webcam from "react-webcam";
 import ImageUploader from 'react-images-upload';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -71,7 +71,7 @@ export class WhatsOnYourMind extends React.Component {
             onKeyPress={event => {
               if (event.key === 'Enter') {
               var d=new Date();
-              this.props.updatePost(this.props.alias,d.toString(),this.state.blah,
+              this.props.updatePost(this.props.alias,d.toLocaleString("en-UK"),this.state.blah,
               this.state.pic,d.getTime());this.setState({blah:"",pic:null})}}}
           /></Col>
           <Col style={{padding: '0'}}  xs={1}><Button className="butz2" onClick={()=>this.setState({addPic:!this.state.addPic})

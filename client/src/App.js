@@ -69,12 +69,9 @@ class App extends Component {
       .then(res => {
         if (!res.success) this.setState({ error: res.error });
         else {
-          this.setState({ name: res.user[0].name, id: res.user[0]._id, posts: res.user[0].posts, friends: res.user[0].friends, email: res.user[0].email, profilePic: res.user[0].profilePic, messages: res.user[0].messages }, () => {
-              this.state.friends.forEach((ele)=>this.findFriendByEmail(ele.email))
-            
-          });
+          this.setState({ name: res.user[0].name, id: res.user[0]._id, posts: res.user[0].posts, friends: res.user[0].friends, email: res.user[0].email, profilePic: res.user[0].profilePic, messages: res.user[0].messages } );
         }
-        this.setState({friends:this.state.freshFriends})
+        
       })
   }
   sortByKey(array, key) {

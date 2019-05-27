@@ -1,9 +1,7 @@
 import React from "react";
- 
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCamera,faFileImage} from '@fortawesome/free-solid-svg-icons'
+import{Friend} from "../Components/friend"
 
-import { FormControl, Row, Container, Col,Button,Card } from "react-bootstrap";
+import { FormControl } from "react-bootstrap";
 export class FindFriends extends React.Component {
     constructor(props) {
         super(props);
@@ -15,6 +13,7 @@ export class FindFriends extends React.Component {
         };
         
         this.onTextboxChange = this.onTextboxChange.bind(this);
+        this.onTextboxBlur = this.onTextboxBlur.bind(this);
     
     }
     onTextboxChange(event){
@@ -22,11 +21,16 @@ export class FindFriends extends React.Component {
           blah: event.target.value
         }, this.props.findFriend( event.target.value))
    }
+   onTextboxBlur(){
+    this.setState({
+      blah: ""
+    })
+}
         render() {
             ;
             return (
              
-                <div float="left">
+                <div float="left" >
                     
                     <FormControl 
                   
@@ -34,11 +38,15 @@ export class FindFriends extends React.Component {
                     placeholder="Find friends"
                     value={this.state.blah}
                     onChange={this.onTextboxChange}
+                    onBlur={this.onTextboxBlur}
                     
-                    onKeyPress={event => {
-                      if (event.key === 'Enter') {
-                      }}}
-                  /> 
+                   
+                     
+                  /> <div >
+                  {this.props.otherPeople.name && <Friend  addFriend={this.props.addFriend} pals={false}
+                    friend={this.props.otherPeople}
+                     />}</div>
+            
                   </div>
                    
                  

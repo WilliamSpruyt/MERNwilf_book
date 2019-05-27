@@ -64,12 +64,10 @@ export class Homescreen extends React.Component {
           })}</Col><Col  style={{padding:'25px' }} >
           
           <h3>Find Friends</h3>
-           <FindFriends  findFriend={this.props.findFriend}/>
+
+           <FindFriends  findFriend={this.props.findFriend} otherPeople={this.props.otherPeople}  addFriend={this.props.addFriend} pals={false}/>
            
-                   {this.props.otherPeople.name && <Friend  addFriend={this.props.addFriend} pals={false}
-                    friend={this.props.otherPeople}
-                     />}
-            
+                   
             <Inbox messages={this.props.messages}  />
                  
           </Col>

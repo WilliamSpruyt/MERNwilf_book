@@ -8,7 +8,6 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    
     "heroku-postbuild": "cd client && npm install && npm run build"
   },
   "author": "William Spruyt",
@@ -32,6 +31,7 @@
     "validator": "^10.11.0"
   },
   "devDependencies": {
+    "babel-eslint": "^10.0.1",
     "nodemon": "^1.19.0"
   },
   "engines": {

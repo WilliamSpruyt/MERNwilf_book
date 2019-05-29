@@ -1,5 +1,5 @@
 import React from "react";
-import logo from "../Assets/logo.svg"
+ 
 import { Card, Button } from "react-bootstrap";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faThumbsUp,faThumbsDown } from '@fortawesome/free-solid-svg-icons'
@@ -29,7 +29,7 @@ export class Post extends React.Component {
             {this.props.date}
 
           </Card.Text>
-    {(this.props.user != this.props.alias) && <Button onClick={() => { this.props.like(this.props.user, this.props.alias, this.props.timestamp);this.setState({clicked:!this.state.clicked}) }}>{(this.state.clicked)?<FontAwesomeIcon icon={faThumbsDown} /> :<FontAwesomeIcon icon={faThumbsUp} />}</Button>}
+    {(this.props.user !== this.props.alias) && <Button onClick={() => { this.props.like(this.props.user, this.props.alias, this.props.timestamp);this.setState({clicked:!this.state.clicked}) }}>{(this.state.clicked)?<FontAwesomeIcon icon={faThumbsDown} /> :<FontAwesomeIcon icon={faThumbsUp} />}</Button>}
           {this.props.likedBy.length>0 && <Card.Text>{this.props.likedBy.length + " "}{this.props.likedBy.map((ele) => { return <span className="tinyGreyScript">{ele+","}</span> })}</Card.Text>}
         </Card.Body>
       </Card>
@@ -37,4 +37,3 @@ export class Post extends React.Component {
   }
 
 }
-//like(user,alias,timestamp)

@@ -54,7 +54,7 @@ class App extends Component {
 
   }
   componentDidMount() {
-    console.log(this.state.comps)
+    
     window.scrollTo(0, 0)
 
 
@@ -150,35 +150,43 @@ class App extends Component {
 
   }
 
-  like(user,alias,timestamp){
-    var likedAlready=-1;
-    var friendArray=this.state.friends.slice(0);
-
-    var friendIndex = friendArray.findIndex(function(element) {
-      return  element.name==alias ;
-     
+  like(user, alias, timestamp) {
+    var likedAlready = -1;
+    var friendArray = this.state.friends.slice(0);
+  
+    var friendIndex = friendArray.findIndex(function (element) {
+      return element.name === alias;
     });
-     
-    var likedPostIndex=friendArray[friendIndex].posts.findIndex(function(element){
-      return  element.timestamp==timestamp
+  
+    var likedPostIndex = friendArray[friendIndex].posts.findIndex(function (element) {
+      return element.timestamp === timestamp
     })
-
-    if(likedPostIndex>-1){
-    if(friendArray[friendIndex].posts[likedPostIndex].likedBy)  {likedAlready=friendArray[friendIndex].posts[likedPostIndex].likedBy.findIndex(
-       function(element) {return element==user}
-      )}
-      if(likedAlready>-1){
-        friendArray[friendIndex].posts[likedPostIndex].likedBy.splice(likedAlready,1)
+  
+    if (likedPostIndex > -1) {
+      if (friendArray[friendIndex].posts[likedPostIndex].likedBy) {
+        likedAlready = friendArray[friendIndex].posts[likedPostIndex].likedBy.findIndex(
+          function (element) {
+            return element === user
+          }
+        )
       }
-      else{
-      if(friendArray[friendIndex].posts[likedPostIndex].likedBy){
-        
-        friendArray[friendIndex].posts[likedPostIndex].likedBy=friendArray[friendIndex].posts[likedPostIndex].likedBy.concat(user)}
-      else{friendArray[friendIndex].posts[likedPostIndex].likedBy=[user]}}
-   this.setState({friends:friendArray},()=>{this.sendLike(user,this.state.friends[friendIndex]._id, friendArray[friendIndex].posts[likedPostIndex]) })
+      if (likedAlready > -1) {
+        friendArray[friendIndex].posts[likedPostIndex].likedBy.splice(likedAlready, 1)
+      } else {
+        if (friendArray[friendIndex].posts[likedPostIndex].likedBy) {
+          friendArray[friendIndex].posts[likedPostIndex].likedBy = friendArray[friendIndex].posts[likedPostIndex].likedBy.concat(user)
+        } else {
+          friendArray[friendIndex].posts[likedPostIndex].likedBy = [user]
+        }
+      }
+      this.setState({
+        friends: friendArray
+      }, () => {
+        this.sendLike(user, this.state.friends[friendIndex]._id, friendArray[friendIndex].posts[likedPostIndex])
+      })
+    }
+  
   }
- 
-}
  
 
 
@@ -189,7 +197,7 @@ class App extends Component {
 
   findFriend = (term) => {
 
-    if (term != this.state.name) {
+    if (term !==this.state.name) {
       // fetch returns a promise. If you are not familiar with promises, see
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
       fetch(`${url}/friends/${term}`)
@@ -207,7 +215,7 @@ class App extends Component {
   
   findFriendByEmail = (term) => {
 
-    if (term != this.state.name) {
+    if (term !== this.state.name) {
       // fetch returns a promise. If you are not familiar with promises, see
       // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
       fetch(`${url}/refresh/${term}`)

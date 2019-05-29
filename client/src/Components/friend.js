@@ -1,13 +1,11 @@
 import React from "react";
- 
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons'
 import { faUserSlash } from '@fortawesome/free-solid-svg-icons'
- 
 import "./login.css"
 import { MessageBox } from './message-box';
-
 import {   Button, Card } from "react-bootstrap";
+
 export class Friend extends React.Component {
   render() {
     return (

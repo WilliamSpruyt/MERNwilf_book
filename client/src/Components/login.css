@@ -63,6 +63,19 @@
   
 }
 
+.wilf {
+  height: 55px; 
+  width: 110px;   
+  background-image:url('../Assets/wilf.svg');
+  background-repeat:no-repeat;
+  background-position: center;
+  cursor: pointer;
+  
+  margin: 0;
+  
+}
+
+
 .picButton {
   background-color: silver;
   color: black;

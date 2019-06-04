@@ -4,6 +4,7 @@ import "whatwg-fetch";
 import { Modal, FormControl, Button } from "react-bootstrap";
 import { setInStorage, getFromStorage } from "../utils/storage";
  
+ 
 //const url = "http://localhost:3001";
 const url = "";
 export default class  VerifiedLogin extends Component {
@@ -41,6 +42,7 @@ export default class  VerifiedLogin extends Component {
     );
     this.onSignUp = this.onSignUp.bind(this);
     this.onSignIn = this.onSignIn.bind(this);
+    this.onWilfIn = this.onWilfIn.bind(this);
   }
   componentDidMount() {
     const obj = getFromStorage("the_main_app");
@@ -139,7 +141,11 @@ export default class  VerifiedLogin extends Component {
         }
       });
   }
-    
+  onWilfIn(){
+    this.setState({ signInEmail:"wilfatwilf", signInPassword:"a" }
+    ,this.onSignIn)
+  };
+  
   onSignIn() {
     // Grab state
     const { signInEmail, signInPassword } = this.state;
@@ -229,7 +235,10 @@ export default class  VerifiedLogin extends Component {
           <br />
           <Button className="butz2" onClick={this.onSignIn}>
             Sign In
-          </Button>
+          </Button> Sign in as
+          <Button className="wilf" onClick={this.onWilfIn}>
+         
+        </Button>for instant access
         </div>
        
         
@@ -252,7 +261,7 @@ export default class  VerifiedLogin extends Component {
            
           <FormControl
             type="string"
-            placeholder="Where you live?"
+            placeholder="Where do you live?"
             value={signUpHomeTown}
             onChange={this.onTextboxChangeSignUpHomeTown}
           />

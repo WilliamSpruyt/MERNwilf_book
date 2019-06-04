@@ -12,7 +12,7 @@ import VerifiedLogin from "./Components/verified"
 
 const url = "";
 
-// Get a reference to the database service
+ 
 
 class App extends Component {
 
@@ -34,7 +34,7 @@ class App extends Component {
       otherPeople: [],
       freshFriends:[],
 
-      comps: complimentaries(),
+    
 
 
     };
@@ -130,7 +130,7 @@ class App extends Component {
       else this.setState({ friends: [friend], otherPeople: [] }, () => { this.updateDB() });
     }
     else {
-      var oldFriends = this.state.friends.slice(0);
+      oldFriends = this.state.friends.slice(0);
       var newFriends = oldFriends.filter(ele => ele._id != friend._id);
 
       this.setState({ friends: newFriends }, () => { this.updateDB() });
@@ -185,7 +185,7 @@ class App extends Component {
         this.sendLike(user, this.state.friends[friendIndex]._id, friendArray[friendIndex].posts[likedPostIndex])
       })
     }
-  
+    return friendArray;
   }
  
 
@@ -236,7 +236,7 @@ class App extends Component {
 
   sendMessage(sender, id, time, text, pic) {
 
-    var messages = { sender: sender, text: text, time: time, pic, pic };
+    var messages = { sender: sender, text: text, time: time, pic };
 
 
     return fetch(`${url}/message/${id}`, {
@@ -259,8 +259,7 @@ class App extends Component {
  
   sendLike(user, id,post) {
 
-    var user = user;
-    var post =post;
+     
 
 
     return fetch(`${url}/likes/${id}`, {
@@ -325,7 +324,7 @@ class App extends Component {
   }
   render() {
     return (
-      <div className="App">
+      <div className="App"  >
         <VerifiedLogin id='Login'
           show={this.state.loginshow}
           submit={this.onLogin}
@@ -335,11 +334,39 @@ class App extends Component {
           title="Welcome to WilfBook! Sign in or register"
           loadStatsFromServer={this.loadStatsFromServer}
         />
+       
+        {!this.state.loginshow &&<div> <h3 style={{ marginTop: "10vh", textAlign: "right", padding: "5%" }}>
+        Signed in as {" "+this.state.name+" "}
+        <Button
+          onClick={() => {
+            this.setState({
+              id: -1,
+              user: "",
+              email: '',
+              loginshow: true,
+              message: [],
+              list: [],
+              date: [],
+              posts: [],
+              friends: [],
+              profilePic: "",
 
-        {!this.state.loginshow && <Homescreen
+
+              otherPeople: [],
+
+               
+
+
+            });
+            this.logout();
+          }}
+        >
+          Sign out
+          </Button>
+      </h3> <Homescreen
           sendMessage={this.sendMessage}
           messages={this.state.messages}
-          colors={this.state.comps}
+           
           profilePic={this.state.profilePic}
           updateProfilePic={this.updateProfilePic}
           findFriend={this.findFriend}
@@ -351,39 +378,11 @@ class App extends Component {
           posts={this.mergePost(this.state.posts, this.state.friends)}
           updateDB={this.updateDB}
           updatePost={this.updatePost}
-          addFriend={this.addFriend} />}
+          addFriend={this.addFriend} /></div>}
 
 
 
-        <h3 style={{ marginTop: "10vh", textAlign: "right", padding: "5%" }}>
-          Logged in as {this.state.name}
-          <Button
-            onClick={() => {
-              this.setState({
-                id: -1,
-                user: "",
-                email: '',
-                loginshow: true,
-                message: [],
-                list: [],
-                date: [],
-                posts: [],
-                friends: [],
-                profilePic: "",
-
-
-                otherPeople: [],
-
-                comps: complimentaries(),
-
-
-              });
-              this.logout();
-            }}
-          >
-            log out
-            </Button>
-        </h3>{" "}
+       
         {this.state.date}
         {this.state.message.map((ele, i) => {
           return <div key={i}>{ele}</div>;
@@ -396,35 +395,7 @@ class App extends Component {
 
 
 
-function complimentaries() {
-  var brk1= Math.floor(Math.random() * 256);
-  var brk2= Math.floor(Math.random() * brk1);
 
-
-
-  var red1 =brk2;
-  var red2 =brk1-brk2;
-  var red3 = 256 - brk1
-  var brk1= Math.floor(Math.random() * 256);
-  var brk2= Math.floor(Math.random() * brk1);
-  var gre1 =brk2;
-  var gre2 =brk1-brk2;
-  var gre3 = 256 - brk1
-  var brk1= Math.floor(Math.random() * 256);
-  var brk2= Math.floor(Math.random() * brk1);
-  var blu1 =brk2;
-  var blu2 =brk1-brk2;
-  var blu3 = 256 - brk1
-   
-
-  return {
-    background: [red1, blu1, gre1],
-  
-    color: [red2,blu2,gre2],
-    highlight: [red3,blu3,gre3]
-    
-  };
-}
 
 export default App;
 

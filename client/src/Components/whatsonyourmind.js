@@ -5,7 +5,7 @@ import ImageUploader from 'react-images-upload';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faCamera,faFileImage} from '@fortawesome/free-solid-svg-icons'
 import './login.css';
-import { FormControl, Row, Container, Col,Button,Card, Form } from "react-bootstrap";
+import { FormControl, Row,  Col,Button,Card } from "react-bootstrap";
 export class WhatsOnYourMind extends React.Component {
   constructor(props) {
     super(props);

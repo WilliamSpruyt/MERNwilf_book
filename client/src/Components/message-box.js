@@ -3,7 +3,7 @@ import React from "react";
  
  
 import './login.css';
-import { FormControl, Row, Container, Col,Button,Card, Form } from "react-bootstrap";
+import { FormControl} from "react-bootstrap";
 
 export class MessageBox extends React.Component {
     constructor(props) {
@@ -23,11 +23,7 @@ export class MessageBox extends React.Component {
      
        
     render() {
-      const videoConstraints = {
-        width: 1280,
-        height: 720,
-        facingMode: "user"
-      };
+       
       return (
        
            <FormControl 

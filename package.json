@@ -8,7 +8,8 @@
     "server": "nodemon server.js",
     "client": "npm start --prefix client",
     "dev": "concurrently \"npm run server\" \"npm run client\"",
-    "heroku-postbuild": "cd client && npm install && npm run build"
+    "heroku-postbuild": "cd client && npm install && npm run build",
+    "test": "cd node_modules && cd mocha && cd bin && mocha"
   },
   "author": "William Spruyt",
   "license": "ISC",
@@ -23,6 +24,7 @@
     "express-session": "^1.16.1",
     "is-empty": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
+    "mocha": "^6.1.4",
     "mongoose": "^5.5.7",
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
